@@ -12,21 +12,36 @@ pipeline {
         stage('Build') {
             steps {
                 // Build your application (e.g., with Maven, Gradle, etc.)
-              echo "geetha"
-               
+                echo "geetha"
             }
         }
 
         stage('Test') {
             steps {
                 // Run your tests here (e.g., unit tests, integration tests)
-                //sh './run_tests.sh'
-                echo " hi peddinni"
+                echo "hi peddinni"
             }
         }
 
+        stage('Build image') {
+            steps {
+                script {
+                    // Build the Docker image
+                    dockerImage = docker.build("geethapeddinni/jenkins-docker:latest", '.')
+                }
+            }
+        }
 
-
+        stage('Push image') {
+            steps {
+                script {
+                    // Push the Docker image to a registry
+                    withDockerRegistry([credentialsId: 'dckr_pat_wi7oCqwdSPG51qjEWTZPNVB2lUw', url: 'https://index.docker.io/v1/']) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
     }
 
     post {
@@ -39,14 +54,4 @@ pipeline {
             echo 'Pipeline failed!'
         }
     }
-
-    stage('Build image') {
-    dockerImage = docker.build("geethapeddinni/jenkins-docker:latest",'.')
-    }
-
-stage('Push image') {
-    withDockerRegistry([credentialsId: 'dckr_pat_wi7oCqwdSPG51qjEWTZPNVB2lUw', url: 'https://index.docker.io/v1/']) {
-        dockerImage.push()
-    }
-}
 }

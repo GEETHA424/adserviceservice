@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Build your application (e.g., with Maven, Gradle, etc.)
-        echo "hi geetha"
+        echo "hi geetha peddinni"
             }
         }
 
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 // Run your tests here (e.g., unit tests, integration tests)
                 //sh './run_tests.sh'
-                echo "hi peddinni"
+                echo " hi peddinni"
             }
         }
 

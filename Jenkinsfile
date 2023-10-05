@@ -12,7 +12,8 @@ pipeline {
         stage('Build') {
             steps {
                 // Build your application (e.g., with Maven, Gradle, etc.)
-        echo ls
+              echo "geetha"
+               
             }
         }
 
@@ -38,4 +39,14 @@ pipeline {
             echo 'Pipeline failed!'
         }
     }
+
+    stage('Build image') {
+    dockerImage = docker.build("geethapeddinni/jenkins-docker:latest",'.')
+    }
+
+stage('Push image') {
+    withDockerRegistry([credentialsId: 'dckr_pat_wi7oCqwdSPG51qjEWTZPNVB2lUw', url: 'https://index.docker.io/v1/']) {
+        dockerImage.push()
+    }
+}
 }

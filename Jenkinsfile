@@ -1,37 +1,41 @@
 pipeline {
-  agent any
-  options {
-    buildDiscarder(logRotator(numToKeepStr: '5'))
-  }
-  environment {
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-  }
-  stages {
-    stage('Build') {
-      steps {
-        sh 'docker build -t geetha.peddinni/jenkins-docker-hub .'
-      }
-    }
-    stage('Login') {
-      steps {
-        script {
-          // Use Docker Hub credentials from environment
-          withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW', usernameVariable: 'DOCKERHUB_CREDENTIALS_USR')]) {
-            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-          }
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout your code from a Git repository
+                checkout scm
+            }
         }
-      }
+
+        stage('Build') {
+            steps {
+                // Build your application (e.g., with Maven, Gradle, etc.)
+        echo "hi geetha peddinni"
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run your tests here (e.g., unit tests, integration tests)
+                //sh './run_tests.sh'
+                echo " hi peddinni"
+            }
+        }
+
+
+
     }
-    stage('Push') {
-      steps {
-        sh 'docker push geetha.peddinni/jenkins-docker-hub'
-      }
+
+    post {
+        success {
+            // Perform actions when the pipeline succeeds (e.g., notifications)
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            // Perform actions when the pipeline fails (e.g., notifications)
+            echo 'Pipeline failed!'
+        }
     }
-  }
-  post {
-    always {
-      // Remove or correct the following step based on your requirements
-      sh 'echo "This is a placeholder for post-processing"'
-    }
-  }
 }

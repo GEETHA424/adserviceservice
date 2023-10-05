@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Build your application (e.g., with Maven, Gradle, etc.)
-        echo "hi geetha peddinni"
+        echo ls
             }
         }
 

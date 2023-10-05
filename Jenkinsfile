@@ -12,37 +12,30 @@ pipeline {
         stage('Build') {
             steps {
                 // Build your application (e.g., with Maven, Gradle, etc.)
-                sh './build.sh'
+        echo "hi geetha"
             }
         }
 
         stage('Test') {
             steps {
                 // Run your tests here (e.g., unit tests, integration tests)
-                sh './run_tests.sh'
+                //sh './run_tests.sh'
+                echo "hi peddinni"
             }
         }
 
-        stage('Deploy to Staging') {
-            steps {
-                // Deploy your application to a staging environment
-                sh './deploy_to_staging.sh'
-            }
-        }
 
-        stage('Promote to Production') {
-            when {
-                // Define conditions for promoting to production (e.g., manual approval)
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-            }
-            steps {
-                // Deploy your application to production
-                sh './deploy_to_production.sh'
-            }
-        }
+
     }
 
     post {
         success {
-            // Perform actions when the
-
+            // Perform actions when the pipeline succeeds (e.g., notifications)
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            // Perform actions when the pipeline fails (e.g., notifications)
+            echo 'Pipeline failed!'
+        }
+    }
+}

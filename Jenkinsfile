@@ -1,41 +1,25 @@
 pipeline {
-    agent any
+  agent any
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('dckr_pat_wi7oCqwdSPG51qjEWTZPNVB2lUw') // Use the credential ID you created in step 2
+  }
+  stages {
+    stage('Build and Push Docker Image') {
+      steps {
+        script {
+          // Build the Docker image
+          sh 'docker build -t jenkins-hub:tag .'
 
-    stages {
-        stage('Checkout') {
-            steps {
-                // Checkout your code from a Git repository
-                checkout scm
-            }
+          // Authenticate with Docker Hub
+          withCredentials([usernamePassword(credentialsId: 'dckr_pat_wi7oCqwdSPG51qjEWTZPNVB2lUw', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+            sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin'
+          }
+
+          // Push the Docker image to Docker Hub
+          sh 'docker push jenkins-hub:latest'
         }
-
-        stage('Build') {
-            steps {
-                // Build your application (e.g., with Maven, Gradle, etc.)
-        echo "hi geetha peddinni"
-            }
-        }
-
-        stage('Test') {
-            steps {
-                // Run your tests here (e.g., unit tests, integration tests)
-                //sh './run_tests.sh'
-                echo " hi peddinni"
-            }
-        }
-
-
-
+      }
     }
-
-    post {
-        success {
-            // Perform actions when the pipeline succeeds (e.g., notifications)
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            // Perform actions when the pipeline fails (e.g., notifications)
-            echo 'Pipeline failed!'
-        }
-    }
+  }
 }
+

@@ -27,11 +27,18 @@ pipeline {
         }
         stage('Syft Scan') {
             steps {
-                // Run Syft to analyze the Docker image
-                sh 'syft --json geethapeddinni/jenkins-docker-hub'
+                script {
+                    try {
+                        def syftOutput = sh(returnStatus: true, script: 'syft --json geethapeddinni/jenkins-docker-hub')
+                        echo "Syft Output: ${syftOutput}"
+                    } catch (Exception e) {
+                        echo "Syft failed with an error: ${e}"
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
             }
         }
-    }
+    } // This was missing in your script
     post {
         always {
             sh 'docker logout'

@@ -28,7 +28,7 @@ pipeline {
         stage('Syft Scan') {
             steps {
                 // Run Syft to analyze the Docker image
-                sh 'syft geethapeddinni/jenkins-docker-hub'
+                sh 'syft --json geethapeddinni/jenkins-docker-hub'
             }
         }
     }

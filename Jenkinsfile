@@ -25,6 +25,12 @@ pipeline {
                 sh 'docker push geethapeddinni/jenkins-docker-hub'
             }
         }
+        stage('Syft Scan') {
+            steps {
+                // Run Syft to analyze the Docker image
+                sh 'syft geethapeddinni/jenkins-docker-hub'
+            }
+        }
     }
     post {
         always {
